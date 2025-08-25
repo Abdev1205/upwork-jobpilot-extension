@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Upwork JobPilot",
+  "version": "1.0",
+  "description": "Boost your Upwork productivity – save favorite searches, apply custom filters, and toggle categories effortlessly.",
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Upwork JobPilot"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.upwork.com/*"
+      ],
+      "js": [
+        "src/content.ts"
+      ]
+    }
+  ],
+  "icons": {
+    "16": "logo.png",
+    "48": "logo.png",
+    "128": "logo.png"
+  }
+}

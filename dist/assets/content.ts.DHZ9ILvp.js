@@ -1,0 +1,2 @@
+(function(){console.log("Upwork Search Optimizer content script loaded");chrome.runtime.onMessage.addListener((e,c,o)=>{if(e.action==="getCurrentUrl"&&o({url:window.location.href}),e.action==="updateSearch"){const t=document.querySelector('input[data-test="search-input"]');if(t&&e.keywords){t.value=e.keywords,t.dispatchEvent(new Event("input",{bubbles:!0}));const n=document.querySelector('[data-test="search-button"]');n&&n.click()}}});
+})()
