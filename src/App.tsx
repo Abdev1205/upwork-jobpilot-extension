@@ -16,6 +16,7 @@ import {
 } from "./types";
 import { storage, createUpworkSearchUrl, generateId } from "./lib/utils";
 import ProfileEditor from "./components/ProfileEditor";
+import { Badge } from "./components/ui/badge";
 
 export default function App() {
   const [profiles, setProfiles] = useState<SearchProfile[]>([]);
@@ -156,8 +157,13 @@ export default function App() {
 
   if (isLoading) {
     return (
-      <div className="w-full h-64 flex items-center justify-center">
-        <div className="text-sm text-muted-foreground">Loading...</div>
+      <div className="w-full min-h-[500px] flex items-center justify-center bg-slate-50">
+        <div
+          className="text-sm text-slate-600"
+          style={{ fontFamily: "Roboto, sans-serif" }}
+        >
+          Loading...
+        </div>
       </div>
     );
   }
@@ -173,114 +179,152 @@ export default function App() {
   }
 
   return (
-    <div className="w-full min-h-[500px] p-4 bg-background">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-lg font-semibold text-foreground">
-            Upwork Search Optimizer
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Quick access to optimized job searches
-          </p>
-        </div>
-        <Button
-          onClick={handleCreateProfile}
-          size="sm"
-          className="flex items-center gap-2"
-        >
-          <Plus className="w-4 h-4" />
-          Add
-        </Button>
-      </div>
-
-      <div className="space-y-3">
-        {profiles.map((profile) => (
-          <div
-            key={profile.id}
-            className={`relative p-4 rounded-lg border transition-all hover:shadow-md ${
-              activeProfile === profile.id
-                ? "border-primary bg-primary/5"
-                : "border-border bg-card"
-            }`}
-          >
-            {/* Color indicator */}
-            <div
-              className="absolute left-0 top-0 bottom-0 w-1 rounded-l-lg"
-              style={{ backgroundColor: profile.color }}
-            />
-
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <h3 className="font-medium text-foreground truncate">
-                    {profile.name}
-                  </h3>
-                  {activeProfile === profile.id && (
-                    <div className="w-2 h-2 bg-primary rounded-full" />
-                  )}
-                </div>
-                {profile.description && (
-                  <p className="text-sm text-muted-foreground mb-2">
-                    {profile.description}
-                  </p>
-                )}
-              </div>
-
-              <div className="flex items-center gap-1 ml-2">
-                <Button
-                  onClick={() => handleEditProfile(profile)}
-                  size="sm"
-                  variant="ghost"
-                  className="h-8 w-8 p-0"
-                >
-                  <Edit className="w-4 h-4" />
-                </Button>
-                <Button
-                  onClick={() => handleDeleteProfile(profile.id)}
-                  size="sm"
-                  variant="ghost"
-                  className="h-8 w-8 p-0 text-destructive hover:text-destructive"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </div>
+    <div
+      className="w-full min-h-[500px] bg-white flex flex-col"
+      style={{ fontFamily: "Roboto, sans-serif" }}
+    >
+      {/* Sticky Header */}
+      <div className="sticky w-full top-0 bg-[#042f1a] border-b border-slate-200 px-4 py-3 z-10">
+        <div className="flex items-center h-[3rem] justify-between">
+          <div className="flex items-center gap-2">
+            <img src="./logo.png" alt="" className="w-10 h-10" />
+            <div className="flex flex-col justify-center">
+              <h1
+                className="text-base font-semibold text-white"
+                style={{ fontFamily: "Montserrat, sans-serif" }}
+              >
+                Upwork JobPilot
+              </h1>
+              <p className="text-xs text-white mt-0.5">Quick search profiles</p>
             </div>
-
-            <div className="mb-3">
-              <p className="text-xs text-muted-foreground mb-1">Keywords:</p>
-              <p className="text-sm text-foreground line-clamp-2">
-                {profile.keywords}
-              </p>
-            </div>
-
-            <Button
-              onClick={() => handleSearch(profile)}
-              className="w-full flex items-center gap-2"
-              size="sm"
-            >
-              <Search className="w-4 h-4" />
-              Search Jobs
-              <ExternalLink className="w-3 h-3 ml-auto" />
-            </Button>
           </div>
-        ))}
-      </div>
-
-      {profiles.length === 0 && (
-        <div className="text-center py-12">
-          <Settings className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-foreground mb-2">
-            No Search Profiles
-          </h3>
-          <p className="text-sm text-muted-foreground mb-4">
-            Create your first search profile to get started
-          </p>
-          <Button onClick={handleCreateProfile}>
-            <Plus className="w-4 h-4 mr-2" />
-            Create Profile
+          <Button
+            onClick={handleCreateProfile}
+            size="sm"
+            className="h-8 px-3 text-xs bg-[#0fb563] hover:bg-[#0fb563]/90"
+          >
+            <Plus className="w-3 h-3 mr-1" />
+            Add
           </Button>
         </div>
-      )}
+      </div>
+
+      {/* Scrollable Content */}
+      <div className="flex w-full overflow-y-auto bg-[#0fb5622f] ">
+        {profiles.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full p-6 text-center">
+            <Settings className="w-8 h-8 text-slate-400 mb-3" />
+            <h3
+              className="text-sm font-medium text-slate-900 mb-2"
+              style={{ fontFamily: "Montserrat, sans-serif" }}
+            >
+              No Search Profiles
+            </h3>
+            <p className="text-xs text-slate-500 mb-4">
+              Create your first profile to get started
+            </p>
+            <Button
+              onClick={handleCreateProfile}
+              size="sm"
+              className="h-8 px-3 text-xs bg-blue-600 hover:bg-blue-700"
+            >
+              <Plus className="w-3 h-3 mr-1" />
+              Create Profile
+            </Button>
+          </div>
+        ) : (
+          <div className="p-3 space-y-2">
+            {profiles.map((profile) => (
+              <div
+                key={profile.id}
+                className={`relative p-3 rounded-lg border transition-all duration-200 hover:shadow-sm group ${
+                  activeProfile === profile.id
+                    ? "border-blue-200 bg-blue-50/50"
+                    : "border-slate-200 bg-white hover:border-slate-300"
+                }`}
+              >
+                {/* Color indicator */}
+                <div
+                  className="absolute left-0 top-0 bottom-0 w-1 rounded-l-lg"
+                  style={{ backgroundColor: profile.color }}
+                />
+
+                <div className="flex items-start justify-between mb-2">
+                  <div className="flex-1 min-w-0 pr-2">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3
+                        className="text-sm font-medium text-slate-900 truncate"
+                        style={{ fontFamily: "Montserrat, sans-serif" }}
+                      >
+                        {profile.name}
+                      </h3>
+                      {activeProfile === profile.id && (
+                        <div className="w-1.5 h-1.5 bg-blue-600 rounded-full flex-shrink-0" />
+                      )}
+                    </div>
+                    {profile.description && (
+                      <p className="text-xs text-slate-500 leading-tight">
+                        {profile.description}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Button
+                      onClick={() => handleEditProfile(profile)}
+                      size="sm"
+                      variant="ghost"
+                      className="h-6 w-6 p-0 hover:bg-slate-100"
+                    >
+                      <Edit className="w-3 h-3" />
+                    </Button>
+                    <Button
+                      onClick={() => handleDeleteProfile(profile.id)}
+                      size="sm"
+                      variant="ghost"
+                      className="h-6 w-6 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="mb-3 overflow-x-auto">
+                  <div className={` flex flex-wrap gap-1 `}>
+                    {profile.keywords
+                      .split(",")
+                      .slice(0, 6)
+                      .map((keyword, index) => {
+                        return (
+                          <Badge
+                            key={index}
+                            className="px-2 text-nowrap py-0.5"
+                            variant="outline"
+                          >
+                            <h3 className=" text-xs font-normal font-sans ">
+                              {keyword}
+                            </h3>
+                          </Badge>
+                        );
+                      })}
+                  </div>
+                </div>
+
+                <Button
+                  onClick={() => handleSearch(profile)}
+                  className="w-full h-8 text-xs  text-white"
+                  size="sm"
+                  style={{ backgroundColor: profile.color }}
+                >
+                  <Search className="w-3 h-3 mr-2" />
+                  Search Jobs
+                  <ExternalLink className="w-2.5 h-2.5 ml-auto" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
